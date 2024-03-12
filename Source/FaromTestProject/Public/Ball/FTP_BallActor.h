@@ -12,15 +12,55 @@ class FAROMTESTPROJECT_API AFTP_BallActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AFTP_BallActor();
 
+	UFUNCTION()
+	void StartMove();
+	
+	UFUNCTION(Server, Reliable)
+	void Server_StartMove();
+	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	USceneComponent* SceneComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Components)
+	UStaticMeshComponent* MeshBall;
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = BallParameters)
+	float SpeedBall = 500.0f;
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = BallParameters)
+	float MaxSpeedBall = 800.0f;
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = BallParameters)
+	float AmountSpeedPerHit = 20.0f;
+	
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = BallParameters)
+	float DeltaBall = 0.01f;
+
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadWrite, Category = BallParameters)
+	float DelayStartMove = 2.0f;
+	
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	UFUNCTION()
+	void MoveBall();
+
+	UFUNCTION(Server, Reliable)
+	void Server_MoveBall();
+
+	UFUNCTION()
+	void OnRep_VelocityBall();
+	
+	UPROPERTY(ReplicatedUsing = OnRep_VelocityBall)
+	FVector VelocityBall;
+	
+	FTimerHandle StartMoveBallTimerManager;
+	FTimerHandle UpdateMoveBallTimerManager;
 };

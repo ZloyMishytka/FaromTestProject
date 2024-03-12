@@ -6,24 +6,29 @@
 #include "GameFramework/Pawn.h"
 #include "FTP_PlayerPawn.generated.h"
 
+class UArrowComponent;
+class UCameraComponent;
+
 UCLASS()
 class FAROMTESTPROJECT_API AFTP_PlayerPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	AFTP_PlayerPawn();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UCameraComponent* CameraComponent;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UStaticMeshComponent* MeshComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USceneComponent* SceneComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UArrowComponent* ArrowComponent;
 };
